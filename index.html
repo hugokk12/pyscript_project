@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <py-env>
     - numpy
     - requests
@@ -15,12 +16,26 @@
     - altair
     - vega_datasets
     - plotly
+    - bokeh
+    - seaborn
+    - pandas_bokeh
     - paths:
       - ./script/altair_project.py
       - ./script/teste.py
       - ./script/data.txt
+      - ./script/dash_project.py
+      - ./script/bokeh_project.py
+      - ./bokeh_test.html
 </py-env>
 <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-2.4.2.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-2.4.2.min.js"></script>
+<script type="text/javascript">
+        Bokeh.set_log_level("info");
+</script>
 
 <style>
 body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
@@ -43,13 +58,13 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <i class="fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
-  <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="#graph1" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-user w3-xxlarge"></i>
-    <p>ABOUT</p>
+    <p>GRAPH 1</p>
   </a>
-  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="#graph2" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-eye w3-xxlarge"></i>
-    <p>PHOTOS</p>
+    <p>GRAPH 2</p>
   </a>
   <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-envelope w3-xxlarge"></i>
@@ -61,8 +76,8 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
   <div class="w3-bar w3-black w3-opacity w3-hover-opacity-off w3-center w3-small">
     <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
-    <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
-    <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
+    <a href="#graph1" class="w3-bar-item w3-button" style="width:25% !important">GRAPH 1</a>
+    <a href="#graph2" class="w3-bar-item w3-button" style="width:25% !important">GRAPH 2</a>
     <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
   </div>
 </div>
@@ -75,40 +90,42 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
   </header>
   
   <!-- Grafico 1 -->
-  <div class="w3-content w3-center w3-text-grey" id="about">
+  <div class="w3-content w3-center w3-text-grey" id="graph1">
     <h2 class="w3-text-light-grey">Grafico #1</h2>
-  
     <hr class="w3-light-grey">
     <div id="matplot" class="w3-center"></div>
 
     <!-- Grafico 2 -->
-    <h2 class="w3-text-light-grey">Grafico #2</h2>
+    <h2 class="w3-text-light-grey" id='graph2'>Grafico #2</h2>
     <hr class="w3-light-grey">
     <div id="plot2" class="w3-center"></div>
     
-  
-    <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
-      <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">11+</span><br>
-        Partners
+    <!-- Grafico 3 -->
+    <h2 class="w3-text-light-grey">Grafico #3</h2>
+    <hr class="w3-light-grey">
+    <div class="w3-center">
+      <div class="w3-center">
+          <button type="button" class="btn btn-secondary">Select chart from list:</button>
       </div>
-      <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">55+</span><br>
-        Projects Done
-      </div>
-      <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">89+</span><br>
-        Happy Clients
-      </div>
-      <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">150+</span><br>
-        Meetings
+
+      <div class="w3-center" >
+          <select class="w3-center" id="select">
+              <option value="Tmax">Maximum Temperature</option>
+              <option value="Tmin">Minimum Temperature</option>
+              <option value="Sun">Sun</option>
+              <option value="Rain">Rain</option>        
+          </select>
       </div>
     </div>
+    <div class="w3-center" >
+      <div id="dash_plot" ></div>
+    </div>
 
-    <button class="w3-button w3-light-grey w3-padding-large w3-section">
-      <i class="fa fa-download"></i> Download Resume
-    </button>
+    <!-- Grafico 4 -->
+    <h2 class="w3-text-light-grey">Grafico #4</h2>
+    <hr class="w3-light-grey">
+    <div id="graph4" class="w3-center"></div>
+  
     
     <!-- Grid for pricing tables -->
     <h3 class="w3-padding-16 w3-text-light-grey">My Price</h3>
@@ -162,7 +179,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
   </div>
   
   <!-- Portfolio Section -->
-  <div class="w3-padding-64 w3-content" id="photos">
+  <div class="w3-padding-64 w3-content">
     <h2 class="w3-text-light-grey">My Photos</h2>
     <hr style="width:200px" class="w3-opacity">
 
@@ -230,15 +247,14 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 </py-script>
 
 <py-script output="matplot">
-    from teste import graph_teste
-    graph_teste()
+    '''from teste import graph_teste
+    graph_teste()'''
 
 </py-script>
 
 <py-script output="hello">
   from teste import hello_teste
   hello_teste()
-
 </py-script>
 
 <py-script output="plot2">
@@ -286,6 +302,78 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     rect | ratings | moviename | bar
 </py-script>
 
+<py-script output="dash_plot">
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  # Get the data
+  from pyodide.http import open_url
+
+  url = 'https://raw.githubusercontent.com/alanjones2/uk-historical-weather/main/data/Heathrow.csv'
+  url_content = open_url(url)
+
+  df = pd.read_csv(url_content)
+
+  # filter the data for the year 2020
+  df = df[df['Year']==2020]
+
+  # Function to plot the chart
+  def plot(chart):
+      fig, ax = plt.subplots()
+      df.plot(y=chart, x='Month', figsize=(8,4),ax=ax)
+      pyscript.write("dash_plot",fig)
+
+  # Set up a proxy to be called when a 'change'
+  # event occurs in the select control 
+  from js import document
+  from pyodide import create_proxy
+
+  # Read the value of the select control
+  # and call 'plot'
+  def selectChange(event):
+      choice = document.getElementById("select").value
+      plot(choice)
+
+  # set the proxy
+  def setup():
+      # Create a JsProxy for the callback function
+      change_proxy = create_proxy(selectChange)
+
+      e = document.getElementById("select")
+      e.addEventListener("change", change_proxy)
+
+  setup()
+  # Intitially call plot with 'Tmax'
+  plot('Tmax')
+</py-script>
+
+<py-script>
+  import json
+  import pyodide
+  from vega_datasets import data
+  from js import Bokeh, console, JSON
+  from bokeh.models.widgets import Slider
+  from bokeh.layouts import column
+  from bokeh.embed import json_item
+  from bokeh.plotting import figure
+  from bokeh.resources import CDN
+  from bokeh.io import curdoc
+  from bokeh.themes import built_in_themes
+
+  curdoc().theme = 'dark_minimal'
+  #pandas_bokeh.output_file('bokeh_test.html')
+  plot_size = figure(plot_width=800, plot_height=800)
+  plot_size_r = plot_size.circle([1,2,3,4,5],[3,2,5,6,4], radius=0.1, alpha=0.5)
+
+  slider = Slider(start=0.1, end=1, step=0.01, value=0.2)
+  slider.js_link('value', plot_size_r.glyph, 'radius')
+  
+  p = column(plot_size, slider)
+  p_json = json.dumps(json_item(p, "graph4"))
+
+  Bokeh.embed.embed_item(JSON.parse(p_json))
+
+</py-script>
 
 </body>
 </html>
